@@ -1,0 +1,7 @@
+# Python-only dependencies used by the amr_demo nodes.
+# ROS 2, Nav2, Gazebo, ros_gz_bridge, cv_bridge, and message packages
+# should be installed through ROS/apt/rosdep, not pip.
+
+PyQt6
+PyYAML
+opencv-python

@@ -59,6 +59,14 @@ colcon build --packages-select amr_demo
 source install/setup.bash
 ```
 
+Python-only dependencies used by the GUI and QR detector are listed in `requirements.txt`:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+ROS 2, Nav2, Gazebo, `ros_gz_bridge`, `cv_bridge`, and ROS message packages are still installed through ROS/apt, not through this file.
+
 If old Gazebo or ROS processes are still running:
 
 ```bash
@@ -227,7 +235,7 @@ slam_params_file:=/home/test/EECE698/PROJECT/amr_project_ws/src/amr_demo/config/
 
 ### Terminal 5: Explore the Town
 
-Autonomous sweep:
+Using autonomous sweep:
 
 ```bash
 conda deactivate
@@ -237,7 +245,7 @@ cd ~/EECE698/PROJECT/amr_project_ws
 python3 src/amr_demo/scripts/odom_sweep_explorer.py
 ```
 
-Teleop was also used during testing/debugging:
+Or using teleop:
 
 ```bash
 conda deactivate
