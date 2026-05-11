@@ -2,7 +2,7 @@
 
 Final project repository for EECE 698 by Gabriel Menassa and Larissa Azar.
 
-The project runs an autonomous service robot in a simulated town. The robot uses ROS 2, Gazebo, Nav2, a saved SLAM map, QR landmark detection, a Python GUI, and two moving traffic robots.
+The project runs an autonomous service robot in a simulated town. The robot first maps the town and records QR landmarks, then uses the saved map and landmark file to execute GUI-selected missions with Nav2 while two traffic robots move in the environment.
 
 ## Repository Structure
 
@@ -26,15 +26,17 @@ Important nodes:
 - `traffic_random_nav_goals`: sends random Nav2 goals to the two traffic robots.
 - `traffic_controller`: older/simple loop controller for traffic robots.
 
-## Main Features
+## Main Features / Requirements Covered
 
 - Gazebo simulated town with service robot, houses, delivery locations, QR signs, and traffic robots.
-- Nav2 navigation on a saved map using AMCL localization.
+- SLAM-based map generation for the town.
+- QR landmark detection from the front camera and storage of landmark poses.
+- Nav2 navigation on the saved map using AMCL localization.
+- Programmatic mission execution without RViz goal clicks.
 - GUI mission selection for grocery, food, fire, and medical missions.
-- Saved landmark database for dock, houses, supermarket, restaurant, fire station, and pharmacy.
-- QR landmark detection from the front camera.
-- Optional SLAM workflow for generating a new map.
+- Mission sequence: dock -> pickup landmark -> selected house -> dock.
 - Two moving traffic robots using their own Nav2 stacks in the final run.
+- 2D LiDAR is used for mapping, localization, obstacle detection, and navigation. The camera is only used for QR landmark detection.
 
 ## Setup and Build
 
@@ -139,7 +141,7 @@ pkill -f qr_landmark_detector
 ros2 run amr_demo qr_landmark_detector
 ```
 
-Optional teleop while scanning QR codes:
+Helper teleop command while scanning QR codes:
 
 ```bash
 conda deactivate 2>/dev/null || true
@@ -148,7 +150,7 @@ source ~/EECE698/PROJECT/amr_project_ws/install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd_vel
 ```
 
-Optional camera view:
+Helper camera viewer:
 
 ```bash
 conda deactivate 2>/dev/null || true
@@ -176,9 +178,9 @@ landmarks:
 EOF
 ```
 
-## Mapping / SLAM
+## Mapping / SLAM Requirement
 
-These were the commands used when generating a map.
+This is the Part 1 mapping workflow used to generate and save the town map. The final mission run uses the saved map in `src/amr_demo/maps/town_map_best.yaml`.
 
 ### Terminal 1: Gazebo
 
@@ -223,18 +225,9 @@ use_sim_time:=true \
 slam_params_file:=/home/test/EECE698/PROJECT/amr_project_ws/src/amr_demo/config/slam_toolbox.yaml
 ```
 
-### Terminal 5: Move the Robot
+### Terminal 5: Explore the Town
 
-Teleop:
-
-```bash
-conda deactivate
-source /opt/ros/jazzy/setup.bash
-source ~/EECE698/PROJECT/amr_project_ws/install/setup.bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd_vel
-```
-
-Or autonomous sweep:
+Autonomous sweep:
 
 ```bash
 conda deactivate
@@ -242,6 +235,15 @@ source /opt/ros/jazzy/setup.bash
 source ~/EECE698/PROJECT/amr_project_ws/install/setup.bash
 cd ~/EECE698/PROJECT/amr_project_ws
 python3 src/amr_demo/scripts/odom_sweep_explorer.py
+```
+
+Teleop was also used during testing/debugging:
+
+```bash
+conda deactivate
+source /opt/ros/jazzy/setup.bash
+source ~/EECE698/PROJECT/amr_project_ws/install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd_vel
 ```
 
 ### Terminal 6: Save Map
