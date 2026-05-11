@@ -1,0 +1,7 @@
+image: town_map_best.pgm
+mode: trinary
+resolution: 0.050
+origin: [-13.501, -12.523, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

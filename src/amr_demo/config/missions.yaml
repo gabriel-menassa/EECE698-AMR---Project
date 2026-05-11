@@ -1,0 +1,14 @@
+missions:
+  grocery: SUPERMARKET
+  food: RESTAURANT
+  fire: FIRE_STATION
+  medical: PHARMACY
+
+homes:
+  - HOUSE_1
+  - HOUSE_2
+  - HOUSE_3
+  - HOUSE_4
+  - HOUSE_5
+
+dock: DOCK
